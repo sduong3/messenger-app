@@ -1,6 +1,6 @@
-import React from "react";
-import { Redirect, useHistory } from "react-router-dom";
-import { connect } from "react-redux";
+import React from 'react';
+import { Redirect, useHistory } from 'react-router-dom';
+import { connect } from 'react-redux';
 import {
   Grid,
   Box,
@@ -8,8 +8,9 @@ import {
   Button,
   FormControl,
   TextField,
-} from "@material-ui/core";
-import { login } from "./store/utils/thunkCreators";
+} from '@material-ui/core';
+import { SideBanner, AccountHeader, LoginForm } from './components/Account';
+import { login } from './store/utils/thunkCreators';
 
 const Login = (props) => {
   const history = useHistory();
@@ -24,44 +25,70 @@ const Login = (props) => {
   };
 
   if (user.id) {
-    return <Redirect to="/home" />;
+    return <Redirect to='/home' />;
   }
 
   return (
-    <Grid container justify="center">
-      <Box>
+    <Grid container justifyContent='space-between'>
+      <Grid item sm={5} xs={12}>
+        <SideBanner />
+      </Grid>
+
+      <Grid sm={7} container item>
+        <Grid
+          container
+          item
+          direction='column'
+          justifyContent='center'
+          alignItems='center'
+        >
+          <AccountHeader
+            text="Don't have an account?"
+            route='/register'
+            button='Create account'
+          />
+        </Grid>
+
+        <Grid container item justifyContent='center'>
+          <LoginForm handleLogin={handleLogin} />
+        </Grid>
+      </Grid>
+
+      {/* <Box>
         <Grid container item>
           <Typography>Need to register?</Typography>
-          <Button onClick={() => history.push("/register")}>Register</Button>
+          <Button onClick={() => history.push('/register')}>
+            Create account
+          </Button>
         </Grid>
         <form onSubmit={handleLogin}>
           <Grid>
             <Grid>
-              <FormControl margin="normal" required>
+              <FormControl margin='normal' required>
                 <TextField
-                  aria-label="username"
-                  label="Username"
-                  name="username"
-                  type="text"
+                  aria-label='username'
+                  label='Username'
+                  name='username'
+                  type='text'
                 />
               </FormControl>
             </Grid>
-            <FormControl margin="normal" required>
+            <FormControl margin='normal' required>
               <TextField
-                label="password"
-                aria-label="password"
-                type="password"
-                name="password"
+                label='password'
+                aria-label='password'
+                type='password'
+                name='password'
               />
             </FormControl>
             <Grid>
-              <Button type="submit" variant="contained" size="large">
+              <Button type='submit' variant='contained' size='large'>
                 Login
               </Button>
             </Grid>
           </Grid>
         </form>
-      </Box>
+      </Box> */}
     </Grid>
   );
 };
