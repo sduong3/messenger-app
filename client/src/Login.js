@@ -1,14 +1,7 @@
 import React from 'react';
 import { Redirect, useHistory } from 'react-router-dom';
 import { connect } from 'react-redux';
-import {
-  Grid,
-  Box,
-  Typography,
-  Button,
-  FormControl,
-  TextField,
-} from '@material-ui/core';
+import { Grid } from '@material-ui/core';
 import { SideBanner, AccountHeader, LoginForm } from './components/Account';
 import { login } from './store/utils/thunkCreators';
 
@@ -53,42 +46,6 @@ const Login = (props) => {
           <LoginForm handleLogin={handleLogin} />
         </Grid>
       </Grid>
-
-      {/* <Box>
-        <Grid container item>
-          <Typography>Need to register?</Typography>
-          <Button onClick={() => history.push('/register')}>
-            Create account
-          </Button>
-        </Grid>
-        <form onSubmit={handleLogin}>
-          <Grid>
-            <Grid>
-              <FormControl margin='normal' required>
-                <TextField
-                  aria-label='username'
-                  label='Username'
-                  name='username'
-                  type='text'
-                />
-              </FormControl>
-            </Grid>
-            <FormControl margin='normal' required>
-              <TextField
-                label='password'
-                aria-label='password'
-                type='password'
-                name='password'
-              />
-            </FormControl>
-            <Grid>
-              <Button type='submit' variant='contained' size='large'>
-                Login
-              </Button>
-            </Grid>
-          </Grid>
-        </form>
-      </Box> */}
     </Grid>
   );
 };
