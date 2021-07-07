@@ -1,9 +1,9 @@
-const router = require("express").Router();
-const { Conversation, Message } = require("../../db/models");
-const onlineUsers = require("../../onlineUsers");
+const router = require('express').Router();
+const { Conversation, Message } = require('../../db/models');
+const onlineUsers = require('../../onlineUsers');
 
 // expects {recipientId, text, conversationId } in body (conversationId will be null if no conversation exists yet)
-router.post("/", async (req, res, next) => {
+router.post('/', async (req, res, next) => {
   try {
     if (!req.user) {
       return res.sendStatus(401);
@@ -43,4 +43,16 @@ router.post("/", async (req, res, next) => {
   }
 });
 
+router.patch('/read', async (req, res, next) => {
+  const { conversationId, otherUserId } = req.body;
+  const messages = await Message.update(
+    { read: true },
+    { where: { conversationId, senderId: otherUserId, read: false } }
+  );
+
+  res.send({
+    success: true,
+    data: messages,
+  });
+});
 module.exports = router;
