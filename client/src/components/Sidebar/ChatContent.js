@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import { Box, Typography } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 
@@ -26,13 +26,9 @@ const useStyles = makeStyles((theme) => ({
 
 const ChatContent = (props) => {
   const classes = useStyles();
-  const [ unreadMessagesCount, setUnreadMessagesCount] = useState(0);
   const { conversation } = props;
   const { latestMessageText, otherUser } = conversation;
 
-  useEffect(() => {
-    setUnreadMessagesCount(props.unreadMessagesCount);
-  }, [props.unreadMessagesCount]);
 
   return (
     <Box className={classes.root}>
@@ -41,7 +37,7 @@ const ChatContent = (props) => {
           {otherUser.username}
         </Typography>
         <Typography className={ 
-          unreadMessagesCount > 0 ? classes.unreadText : classes.readText
+          props.unreadMessagesCount > 0 ? classes.unreadText : classes.readText
           }>
           {latestMessageText}
         </Typography>

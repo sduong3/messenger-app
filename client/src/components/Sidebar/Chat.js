@@ -57,17 +57,21 @@ const Chat = (props) => {
   const [ convoWithUsername, setConvoWithUsername ] = useState('');
   const otherUser = props.conversation.otherUser;
 
+  const { conversation } = props;
+  
   useEffect(() => {
-    if (props.conversation.otherUser.username !== convoWithUsername) {
-      return setUnreadMessagesCount(props.conversation.unreadMessagesCount);
+    if (conversation.otherUser.username !== convoWithUsername) {
+      setUnreadMessagesCount(conversation.unreadMessagesCount);
+    } else {
+      setUnreadMessagesCount(0);
     }
-    setUnreadMessagesCount(0);
-  }, [props.conversation.unreadMessagesCount]);
+  }, [conversation]);
 
-  const handleClick = async (conversation) => {
+
+  const handleClick = async () => {
     setConvoWithUsername(conversation.otherUser.username);
     await props.setActiveChat(conversation.otherUser.username);
-    await axios.patch("/api/messages/read", {
+    await axios.patch("/api/messages/markAsread", {
       conversationId: conversation.id,
       otherUserId: conversation.otherUser.id
     });
@@ -76,7 +80,7 @@ const Chat = (props) => {
   
   return (
     <Box
-      onClick={() => handleClick(props.conversation)}
+      onClick={handleClick}
       className={classes.root}
     >
       <BadgeAvatar
