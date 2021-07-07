@@ -9,7 +9,7 @@ import { setActiveChat } from '../../store/activeConversation';
 import { connect } from 'react-redux';
 import axios from 'axios';
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(() => ({
   root: {
     borderRadius: 8,
     height: 80,
@@ -21,27 +21,27 @@ const useStyles = makeStyles((theme) => ({
       cursor: "grab",
     },
   },
-  // TODO: polish up later
   notification: {
-    height: '25px',
-    width: '25px',
-    backgroundColor: theme.palette.primary.main,
-    color: 'white',
-    borderRadius: 10,
+    height: 20,
+    width: 20,
+    backgroundColor: "#3F92FF",
+    marginRight: 10,
+    color: "white",
     fontSize: 10,
-    fontWeight: 'bold',
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-    padding: '0.5rem',
-  },  
+    letterSpacing: -0.5,
+    fontWeight: "bold",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    borderRadius: 10,
+  },
 }));
 
 const Chat = (props) => {
+  const classes = useStyles();
   const [ unreadMessagesCount, setUnreadMessagesCount ] = useState(0);
   const [ convoWithUsername, setConvoWithUsername ] = useState('');
   const otherUser = props.conversation.otherUser;
-  const classes = useStyles();
 
   useEffect(() => {
     if (props.conversation.otherUser.username !== convoWithUsername) {
