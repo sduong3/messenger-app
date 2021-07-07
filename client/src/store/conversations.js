@@ -15,8 +15,16 @@ const REMOVE_OFFLINE_USER = "REMOVE_OFFLINE_USER";
 const SET_SEARCHED_USERS = "SET_SEARCHED_USERS";
 const CLEAR_SEARCHED_USERS = "CLEAR_SEARCHED_USERS";
 const ADD_CONVERSATION = "ADD_CONVERSATION";
+const UPDATE_READ_MESSAGES = 'UPDATE_READ_MESSAGES';
 
 // ACTION CREATORS
+
+export const updatedReadMessages = (messages) => {
+  return {
+    type: UPDATE_READ_MESSAGES,
+    messages
+  };
+};
 
 export const gotConversations = (conversations) => {
   return {
@@ -91,6 +99,8 @@ const reducer = (state = [], action) => {
         action.payload.recipientId,
         action.payload.newMessage
       );
+    case UPDATE_READ_MESSAGES:
+      return state;
     default:
       return state;
   }

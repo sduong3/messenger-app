@@ -7,7 +7,7 @@ import { BadgeAvatar, ChatContent } from '../Sidebar';
 import { makeStyles } from '@material-ui/core/styles';
 import { setActiveChat } from '../../store/activeConversation';
 import { connect } from 'react-redux';
-import axios from 'axios';
+import { markAsRead } from '../../store/utils/thunkCreators';
 
 const useStyles = makeStyles(() => ({
   root: {
@@ -58,7 +58,7 @@ const Chat = (props) => {
   const otherUser = props.conversation.otherUser;
 
   const { conversation } = props;
-  
+
   useEffect(() => {
     if (conversation.otherUser.username !== convoWithUsername) {
       setUnreadMessagesCount(conversation.unreadMessagesCount);
@@ -71,10 +71,7 @@ const Chat = (props) => {
   const handleClick = async () => {
     setConvoWithUsername(conversation.otherUser.username);
     await props.setActiveChat(conversation.otherUser.username);
-    await axios.patch("/api/messages/markAsread", {
-      conversationId: conversation.id,
-      otherUserId: conversation.otherUser.id
-    });
+    await props.markAsRead(conversation);
     setUnreadMessagesCount(0);
   };
   
@@ -109,6 +106,9 @@ const mapDispatchToProps = (dispatch) => {
     setActiveChat: (id) => {
       dispatch(setActiveChat(id));
     },
+    markAsRead: (conversation) => {
+      dispatch(markAsRead(conversation));
+    }
   };
 };
 

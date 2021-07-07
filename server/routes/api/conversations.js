@@ -76,9 +76,6 @@ router.get("/", async (req, res, next) => {
           !message.isRead && message.senderId === convoJSON.otherUser.id
       ).length;
 
-      console.log('whats in convoJSON');
-      console.log(convoJSON);
-
       conversations[i] = convoJSON;
     }
 
