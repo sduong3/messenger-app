@@ -40,46 +40,49 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 //TODO: organize these elements using grids
-const Chat = ({ setActiveChat, conversation }) => {
-  const [activeChatWithUser, setActiveChatWithUser] = useState('');
+const Chat = (props) => {
+  const [activeChatId, setActiveChatId] = useState('');
   const [unreadMessagesCount, setUnreadMessagesCount] = useState(0);
   const classes = useStyles();
 
   const handleClick = async (clickedConversation) => {
-    setActiveChatWithUser(conversation.otherUser.username);
-    await setActiveChat(clickedConversation.otherUser.username);
+    setActiveChatId(clickedConversation.otherUser.username);
+    await props.setActiveChat(clickedConversation.otherUser.username);
 
     await axios.patch('/api/messages/read', {
-      otherUserId: clickedConversation.otherUser.id,
       conversationId: clickedConversation.id,
+      otherUserId: clickedConversation.otherUser.id,
     });
+    setUnreadMessagesCount(0);
   };
 
-  const otherUser = conversation.otherUser;
+  const otherUser = props.conversation.otherUser;
 
   useEffect(() => {
-    if (conversation.otherUser.username !== activeChatWithUser) {
-      return setUnreadMessagesCount(conversation.unreadMessagesCount);
+    // Only reset the unread notification count
+    if (props.conversation.otherUser.username !== activeChatId) {
+      return setUnreadMessagesCount(props.conversation.unreadMessagesCount);
     }
     setUnreadMessagesCount(0);
-  }, [conversation.unreadMessagesCount]);
+  }, [props.conversation.unreadMessagesCount]);
 
   return (
-    <Box onClick={() => handleClick(conversation)} className={classes.root}>
+    <Box
+      onClick={() => handleClick(props.conversation)}
+      className={classes.root}
+    >
       <BadgeAvatar
         photoUrl={otherUser.photoUrl}
         username={otherUser.username}
         online={otherUser.online}
         sidebar={true}
       />
-      <ChatContent
-        conversation={conversation}
-        unreadMessagesCount={unreadMessagesCount}
-      />
-
-      <Typography className={classes.notification}>
-        {unreadMessagesCount}
-      </Typography>
+      <ChatContent conversation={props.conversation} />
+      {unreadMessagesCount > 0 && (
+        <Typography className={classes.notification}>
+          {unreadMessagesCount}
+        </Typography>
+      )}
     </Box>
   );
 };

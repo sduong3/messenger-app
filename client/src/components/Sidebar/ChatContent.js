@@ -1,35 +1,41 @@
-import React from "react";
-import { Box, Typography } from "@material-ui/core";
-import { makeStyles } from "@material-ui/core/styles";
+import React, { useState, useEffect } from 'react';
+import { Box, Typography } from '@material-ui/core';
+import { makeStyles } from '@material-ui/core/styles';
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    display: "flex",
-    justifyContent: "space-between",
+    display: 'flex',
+    justifyContent: 'space-between',
     marginLeft: 20,
     flexGrow: 1,
   },
   username: {
-    fontWeight: "bold",
+    fontWeight: 'bold',
     letterSpacing: -0.2,
   },
-  previewText: {
+  readText: {
     fontSize: 12,
-    color: "#9CADC8",
+    color: '#9CADC8',
+    letterSpacing: -0.17,
+  },
+  unreadText: {
+    fontSize: 12,
+    color: 'black',
+    fontWeight: 'bold',
     letterSpacing: -0.17,
   },
   notification: {
     height: 20,
     width: 20,
-    backgroundColor: "#3F92FF",
+    backgroundColor: '#3F92FF',
     marginRight: 10,
-    color: "white",
+    color: 'white',
     fontSize: 10,
     letterSpacing: -0.5,
-    fontWeight: "bold",
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
+    fontWeight: 'bold',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
     borderRadius: 10,
   },
 }));
@@ -39,6 +45,13 @@ const ChatContent = (props) => {
 
   const { conversation } = props;
   const { latestMessageText, otherUser } = conversation;
+  const [unreadMessagesCount, setUnreadMessagesCount] = useState(0);
+
+  useEffect(() => {
+    console.log('in heereee');
+    console.log(props.conversation);
+    setUnreadMessagesCount(props.conversation.unreadMessagesCount);
+  }, [props.conversation.unreadMessagesCount]);
 
   return (
     <Box className={classes.root}>
@@ -46,7 +59,11 @@ const ChatContent = (props) => {
         <Typography className={classes.username}>
           {otherUser.username}
         </Typography>
-        <Typography className={classes.previewText}>
+        <Typography
+          className={
+            unreadMessagesCount > 0 ? classes.unreadText : classes.readText
+          }
+        >
           {latestMessageText}
         </Typography>
       </Box>
