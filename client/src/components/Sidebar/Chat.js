@@ -21,9 +21,23 @@ const useStyles = makeStyles(() => ({
       cursor: "grab",
     },
   },
-  notification: {
+  smallNotification: {
     height: 20,
     width: 20,
+    backgroundColor: "#3F92FF",
+    marginRight: 10,
+    color: "white",
+    fontSize: 10,
+    letterSpacing: -0.5,
+    fontWeight: "bold",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    borderRadius: 10,
+  },
+  wideNotification: {
+    height: 20,
+    width: 30,
     backgroundColor: "#3F92FF",
     marginRight: 10,
     color: "white",
@@ -45,8 +59,6 @@ const Chat = (props) => {
 
   useEffect(() => {
     if (props.conversation.otherUser.username !== convoWithUsername) {
-      // set the right notification counter here
-      console.log(props.conversation.unreadMessagesCount);
       return setUnreadMessagesCount(props.conversation.unreadMessagesCount);
     }
     setUnreadMessagesCount(0);
@@ -78,7 +90,8 @@ const Chat = (props) => {
         unreadMessagesCount={unreadMessagesCount}/>
 
       {unreadMessagesCount > 0 &&
-        <Typography className={classes.notification}>
+        <Typography className={
+          unreadMessagesCount > 9 ? classes.wideNotification : classes.smallNotification}>
           {unreadMessagesCount}
         </Typography>
       }
