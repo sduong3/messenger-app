@@ -12,9 +12,12 @@ const deleteOnlineUser = (userId) => {
     return delete onlineUsers[userId];
 }
 
-// For testing purposes
 const getOnlineUsers = () => {
     return onlineUsers;
+}
+
+const getSocketId = (userId) => {
+    return onlineUsers[userId]
 }
 
 module.exports = {
@@ -22,4 +25,5 @@ module.exports = {
     addOnlineUser,
     deleteOnlineUser,
     getOnlineUsers,
+    getSocketId
 };

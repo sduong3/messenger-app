@@ -1,4 +1,4 @@
-const onlineUsers = require("./onlineUsers");
+const { isUserOnline, addOnlineUser, deleteOnlineUser } = require("./onlineUsers");
 
 const socketController = (server) => {
     const io = require("socket.io")(server, {
@@ -9,10 +9,11 @@ const socketController = (server) => {
       });
       
       io.on("connection", (socket) => {
+        console.log("a user connected");
 
         socket.on("go-online", (id) => {
-          if (!onlineUsers.isUserOnline(id)) {
-            onlineUsers.addOnlineUser(id, socket.id);
+          if (!isUserOnline(id)) {
+            addOnlineUser(id, socket.id);
           }
           
           // send the user who just went online to everyone else who is already online
@@ -24,11 +25,14 @@ const socketController = (server) => {
             message: data.message,
             sender: data.sender,
           });
+          
+          // Note: For testing purposes
+          console.log("message: " + data.message.text);
         });
-      
+
         socket.on("logout", (id) => {
-          if (onlineUsers.isUserOnline(id)) {
-            onlineUsers.deleteOnlineUser(id, socket.id);
+          if (isUserOnline(id)) {
+            deleteOnlineUser(id, socket.id);
             socket.broadcast.emit("remove-offline-user", id);
           }
         });
