@@ -27,7 +27,7 @@ const Signup = (props) => {
         <SideBanner />
       </Grid>
 
-      <Grid sm={7} container item>
+      <Grid sm={7} xs={12} container item>
         <Grid
           container
           item

@@ -1,5 +1,5 @@
 import React from "react";
-import { Redirect, useHistory } from "react-router-dom";
+import { Redirect } from "react-router-dom";
 import { connect } from "react-redux";
 import {
   Grid,
@@ -28,7 +28,7 @@ const Login = (props) => {
         <SideBanner />
       </Grid>
 
-      <Grid sm={7} container item>
+      <Grid sm={7} xs={12} container item>
         <Grid
           container
           item
