@@ -9,12 +9,12 @@ const socketController = (server) => {
       });
       
       io.on("connection", (socket) => {
+
         socket.on("go-online", (id) => {
-          if (!onlineUsers.includes(id)) {
-            onlineUsers.push(id);
+          if (!onlineUsers.isUserOnline(id)) {
+            onlineUsers.addOnlineUser(id, socket.id);
           }
-      
-          socket.emit("just went online");
+          
           // send the user who just went online to everyone else who is already online
           socket.broadcast.emit("add-online-user", id);
         });
@@ -27,9 +27,8 @@ const socketController = (server) => {
         });
       
         socket.on("logout", (id) => {
-          if (onlineUsers.includes(id)) {
-            userIndex = onlineUsers.indexOf(id);
-            onlineUsers.splice(userIndex, 1);
+          if (onlineUsers.isUserOnline(id)) {
+            onlineUsers.deleteOnlineUser(id, socket.id);
             socket.broadcast.emit("remove-offline-user", id);
           }
         });
