@@ -25,9 +25,9 @@ const useStyles = makeStyles((theme) => ({
     objectFit: "cover",
   },
   bannerText: {
-    fontSize: "1.5rem",
     textAlign: "center",
-    marginTop: "10%",
+    fontSize: '2rem',
+    margin: theme.spacing(10),
     color: "white",
   },
 }));

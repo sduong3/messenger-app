@@ -9,11 +9,11 @@ const useStyles = makeStyles((theme) => ({
   },
   headerContainer: {
     width: "80%",
-    padding: "3% 5%",
+    padding: theme.spacing(3, 5)
   },
 }));
 
-const AccountHeader = (props) => {
+const AccountHeader = ({ text, route, button }) => {
   const classes = useStyles();
   const history = useHistory();
 
@@ -27,16 +27,16 @@ const AccountHeader = (props) => {
         alignItems='baseline'
       >
         <Grid item>
-          <Typography className={classes.text}>{props.text}</Typography>
+          <Typography className={classes.text}>{text}</Typography>
         </Grid>
         <Grid item>
           <Paper elevation={2}>
             <Button
               variant='outlined'
               color='primary'
-              onClick={() => history.push(props.route)}
+              onClick={() => history.push(route)}
             >
-              {props.button}
+              {button}
             </Button>
           </Paper>
         </Grid>

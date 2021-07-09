@@ -9,19 +9,18 @@ import {
 } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles((theme) => ({
   formTitle: {
-    fontSize: "2rem",
     fontWeight: 'bold'
   },
   formButton: {
     height: 60,
     width: 160,
-    margin: "2rem",
+    margin: theme.spacing(5)
   },
 }));
 
-const LoginForm = (props) => {
+const LoginForm = ({ handleLogin }) => {
   const classes = useStyles();
 
   return (
@@ -29,7 +28,7 @@ const LoginForm = (props) => {
       <Grid>
         <Typography className={classes.formTitle}>Welcome back!</Typography>
       </Grid>
-      <form onSubmit={props.handleLogin}>
+      <form onSubmit={handleLogin}>
         <Grid container direction='column'>
           <FormControl margin='normal' required>
             <TextField
