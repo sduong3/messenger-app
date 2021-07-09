@@ -1,4 +1,5 @@
-const { isUserOnline, addOnlineUser, deleteOnlineUser, getSocketId } = require("./onlineUsers");
+const { isUserOnline, addOnlineUser, deleteOnlineUser, getSocketId, getOnlineUsers } = require("./onlineUsers");
+const { Conversation } = require("./db/models");
 
 const socketController = (server) => {
     const io = require("socket.io")(server, {
@@ -32,35 +33,43 @@ const socketController = (server) => {
       });
 
   const joinRooms = (socket, userId) => {
-    // TODO: Need to fetch all conversation ids mapped to userId
-    // Then socket joins room
-    // And emits the add online user message
+    Conversation.fetchConversationsById(userId)
+      .then((conversations) => {
+        const rooms = conversations.map((conversation) => {
+          return conversation.id.toString();
+        });
 
-    socket.join("tempRooms");
-    console.log("User " + userId + " joined room");
-    // send the user who just went online to everyone else who is already online
-    socket.broadcast.emit("add-online-user", userId);
+        socket.join(rooms);
+        
+        for (let room of rooms) {
+          socket.to(room).emit("add-online-user", userId);
+        }
+      })
+      .catch(err => {
+        console.error(err);
+      })
   }
 
   const leaveRooms = (socket, userId) => {
     for (let room of socket.rooms) {
       socket.to(room).emit("remove-offline-user", userId);
-      console.log("User " + userId + " left room");
     }
   }
 
   const sendMessage = (io, socket, data) => {
+    console.log(getOnlineUsers());
+
     const room = data.message.conversationId.toString();
 
     socket.join(room);
     
     if (isUserOnline(data.recipientId)) {
-      // get the actual socket object of this user's socketId and join room
-      // ex: socketOfOtherUser.join(room)
-    }
+      const socketId = getSocketId(data.recipientId);
 
-    // Note: For testing purposes
-    console.log("message: " + data.message.text);
+      const currSocket = io.sockets.sockets.get(socketId);
+      currSocket.join(room);
+      console.log(`Other User ${socketId} joined room too`);
+    }
 
     socket.to(room).emit("new-message", {
       message: data.message,

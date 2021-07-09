@@ -5,7 +5,7 @@ const isUserOnline = (userId) => {
 }
 
 const addOnlineUser = (userId, socketId) => {
-    return onlineUsers[userId] = [socketId];
+    return onlineUsers[userId] = socketId;
 }
 
 const deleteOnlineUser = (userId) => {
