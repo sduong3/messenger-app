@@ -5,11 +5,17 @@ const socketController = (server) => {
     const io = require("socket.io")(server, {
         cors: {
           origin: process.env.ORIGIN,
-          methods: ["GET", "POST"]
+          methods: ["GET", "POST"],
+          credential: true
         }
       });
       
-      io.on("connection", (socket) => {
+      io.use((socket, next) => {
+        if (!socket.handshake.headers.cookie.includes('messenger-token')){
+          return socket.disconnect();
+        }
+        next();
+      }).on("connection", (socket) => {
         console.log("a user connected");
 
         socket.on("go-online", (userId) => {

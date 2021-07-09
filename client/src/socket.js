@@ -6,40 +6,44 @@ import {
   addOnlineUser,
 } from "./store/conversations";
 
-const socket = io(window.location.origin, {
-  withCredentials: true
-});
+export const socketClient = {
+  socket: null
+};
 
-socket.on("connect", () => {
-  console.log("Connected to server");
+const initSocket = user => {
+  if (user) {
+    socketClient.socket = io(window.location.origin, {
+      withCredentials: true
+    });
+    
+    socketClient.socket.on("connect", () => {
+      console.log("Connected to server");
+    
+      socketClient.socket.on("add-online-user", (id) => {
+        store.dispatch(addOnlineUser(id));
+      });
+    
+      socketClient.socket.on("remove-offline-user", (id) => {
+        store.dispatch(removeOfflineUser(id));
+      });
+    
+      socketClient.socket.on("new-message", (data) => {
+        store.dispatch(setNewMessage(data.message, data.sender));
+      });
+    });
+    
+    /* Error Handling */
+    socketClient.socket.on('connect_error', (err) => {
+      console.error(`connect_error due to ${err.message}`);
+      socketClient.socket.disconnect();
+    });
+    
+    socketClient.socket.on("connect_failed", (err) => {
+      console.error(`connect_failed due to ${err.message}`);
+      socketClient.socket.disconnect();
+    });
+  }
+}
 
-  socket.on("add-online-user", (id) => {
-    store.dispatch(addOnlineUser(id));
-  });
 
-  socket.on("remove-offline-user", (id) => {
-    store.dispatch(removeOfflineUser(id));
-  });
-
-  socket.on("new-message", (data) => {
-    store.dispatch(setNewMessage(data.message, data.sender));
-  });
-});
-
-/* Error Handling */
-socket.on('connect_error', (err) => {
-  console.error(`connect_error due to ${err.message}`);
-  socket.disconnect();
-});
-
-socket.on("connect_failed", (err) => {
-  console.error(`connect_failed due to ${err.message}`);
-  socket.disconnect();
-});
-
-socket.on("disconnect", (err) => {
-  console.error(`disconnect due to ${err.message}`);
-  socket.disconnect();
-});
-
-export default socket;
+export default initSocket;
