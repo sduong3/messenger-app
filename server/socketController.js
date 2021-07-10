@@ -1,4 +1,6 @@
-const { isUserOnline, addOnlineUser, deleteOnlineUser, getSocketId, getOnlineUsers } = require("./onlineUsers");
+const jwt = require("jsonwebtoken");
+const cookie = require("cookie");
+const { isUserOnline, addOnlineUser, deleteOnlineUser, getSocketId } = require("./onlineUsers");
 const { Conversation } = require("./db/models");
 
 const socketController = (server) => {
@@ -14,10 +16,15 @@ const socketController = (server) => {
         if (!socket.handshake.headers.cookie.includes('messenger-token')){
           return socket.disconnect();
         }
-        next();
-      }).on("connection", (socket) => {
-        console.log("a user connected");
 
+        const token = cookie.parse(socket.handshake.headers.cookie)['messenger-token'];
+        jwt.verify(token, process.env.SESSION_SECRET, (err, decoded) => {
+          if(err){
+            next(new Error("Cookie is not valid!"));
+          } 
+          next();
+        })
+      }).on("connection", (socket) => {
         socket.on("go-online", (userId) => {
           if (!isUserOnline(userId)) {
             addOnlineUser(userId, socket.id);
@@ -63,10 +70,7 @@ const socketController = (server) => {
   }
 
   const sendMessage = (io, socket, data) => {
-    console.log(getOnlineUsers());
-
     const room = data.message.conversationId.toString();
-
     socket.join(room);
     
     if (isUserOnline(data.recipientId)) {
@@ -74,7 +78,6 @@ const socketController = (server) => {
 
       const currSocket = io.sockets.sockets.get(socketId);
       currSocket.join(room);
-      console.log(`Other User ${socketId} joined room too`);
     }
 
     socket.to(room).emit("new-message", {
