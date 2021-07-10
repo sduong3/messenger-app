@@ -23,7 +23,7 @@ const Signup = (props) => {
 
   return (
     <Grid container justifyContent='space-between'>
-      <Grid item sm={5} xs={12}>
+      <Grid item sm={5}>
         <SideBanner />
       </Grid>
 

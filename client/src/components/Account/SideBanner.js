@@ -36,7 +36,7 @@ const SideBanner = () => {
   const classes = useStyles();
 
   return (
-    <Box className={classes.sideBannerContainer}>
+    <Box className={classes.sideBannerContainer} display={{ xs: 'none', sm: 'block' }}>
       <Box className={classes.overlay}>
         <img className={classes.icon} src={bubbleIcon} alt='Message Icon' />
         <Typography className={classes.bannerText}>
