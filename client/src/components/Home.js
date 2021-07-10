@@ -10,7 +10,7 @@ import { clearOnLogout } from "../store/index";
 
 const styles = {
   root: {
-    height: "97vh",
+    height: "90vh",
   },
 };
 
@@ -47,14 +47,17 @@ class Home extends Component {
     }
     return (
       <>
-        {/* logout button will eventually be in a dropdown next to username */}
         <Button className={classes.logout} onClick={this.handleLogout}>
           Logout
         </Button>
-        <Grid container component="main" className={classes.root}>
+        <Grid container component="main" className={classes.root} >
           <CssBaseline />
-          <SidebarContainer />
-          <ActiveChat />
+          <Grid item sm={3} xs={12}>
+            <SidebarContainer />
+          </Grid>
+          <Grid item sm={9} xs={12}>
+            <ActiveChat />
+          </Grid>
         </Grid>
       </>
     );
