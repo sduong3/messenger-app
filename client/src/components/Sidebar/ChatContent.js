@@ -24,9 +24,8 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const ChatContent = (props) => {
+const ChatContent = ({ conversation, unreadMessagesCount }) => {
   const classes = useStyles();
-  const { conversation } = props;
   const { latestMessageText, otherUser } = conversation;
 
 
@@ -37,7 +36,7 @@ const ChatContent = (props) => {
           {otherUser.username}
         </Typography>
         <Typography className={ 
-          props.unreadMessagesCount > 0 ? classes.unreadText : classes.readText
+          unreadMessagesCount > 0 ? classes.unreadText : classes.readText
           }>
           {latestMessageText}
         </Typography>
