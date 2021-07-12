@@ -1,7 +1,7 @@
 const jwt = require("jsonwebtoken");
 const cookie = require("cookie");
 const { isUserOnline, addOnlineUser, deleteOnlineUser, getSocketId } = require("./onlineUsers");
-const { Conversation } = require("./db/models");
+const { fetchConversationsByUserId } = require("./db/models/conversation");
 
 const socketController = (server) => {
     const io = require("socket.io")(server, {
@@ -25,12 +25,12 @@ const socketController = (server) => {
           next();
         })
       }).on("connection", (socket) => {
-        socket.on("go-online", (userId) => {
+        socket.on("go-online", async (userId) => {
           if (!isUserOnline(userId)) {
             addOnlineUser(userId, socket.id);
           }
           
-          joinRooms(socket, userId);
+          await joinRooms(socket, userId);
         });
       
         socket.on("new-message", (data) => {
@@ -45,22 +45,19 @@ const socketController = (server) => {
         });
       });
 
-  const joinRooms = (socket, userId) => {
-    Conversation.fetchConversationsById(userId)
-      .then((conversations) => {
-        const rooms = conversations.map((conversation) => {
-          return conversation.id.toString();
-        });
-
+  const joinRooms = async (socket, userId) => {
+      try {
+        const conversations = await fetchConversationsByUserId(userId);
+        const rooms = conversations.map((conversation) => conversation.id.toString());
         socket.join(rooms);
         
         for (let room of rooms) {
           socket.to(room).emit("add-online-user", userId);
         }
-      })
-      .catch(err => {
+      } catch (err) {
         console.error(err);
-      })
+      }
+      
   }
 
   const leaveRooms = (socket, userId) => {

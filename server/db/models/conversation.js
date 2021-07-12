@@ -22,7 +22,7 @@ Conversation.findConversation = async function (user1Id, user2Id) {
   return conversation;
 };
 
-Conversation.fetchConversationsById = async function (userId) {
+Conversation.fetchConversationsByUserId = async function (userId) {
   const conversations = await Conversation.findAll({
     where: {
       [Op.or]: {
