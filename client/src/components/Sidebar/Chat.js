@@ -54,22 +54,17 @@ const useStyles = makeStyles(() => ({
 const Chat = (props) => {
   const classes = useStyles();
   const [ unreadMessagesCount, setUnreadMessagesCount ] = useState(0);
-  const [ convoWithUsername, setConvoWithUsername ] = useState('');
   const otherUser = props.conversation.otherUser;
 
   const { conversation } = props;
+  const isActiveConvo = props.activeConversation !== conversation.otherUser.username;
 
   useEffect(() => {
-    if (conversation.otherUser.username !== convoWithUsername) {
-      setUnreadMessagesCount(conversation.unreadMessagesCount);
-    } else {
-      setUnreadMessagesCount(0);
-    }
+    setUnreadMessagesCount(conversation.unreadMessagesCount);
   }, [conversation]);
 
 
   const handleClick = async () => {
-    setConvoWithUsername(conversation.otherUser.username);
     await props.setActiveChat(conversation.otherUser.username);
     await props.markAsRead(conversation);
     setUnreadMessagesCount(0);
@@ -88,9 +83,11 @@ const Chat = (props) => {
       />
       <ChatContent 
         conversation={props.conversation} 
+        isActiveConvo={isActiveConvo}
         unreadMessagesCount={unreadMessagesCount}/>
 
-      {unreadMessagesCount > 0 &&
+      {isActiveConvo && 
+      unreadMessagesCount > 0 && 
         <Typography className={
           unreadMessagesCount > 9 ? classes.wideNotification : classes.smallNotification}>
           {unreadMessagesCount}
@@ -100,6 +97,11 @@ const Chat = (props) => {
   );
 }
 
+const mapStateToProps = (state) => {
+  return {
+    activeConversation: state.activeConversation
+  }
+}
 
 const mapDispatchToProps = (dispatch) => {
   return {
@@ -112,4 +114,4 @@ const mapDispatchToProps = (dispatch) => {
   };
 };
 
-export default connect(null, mapDispatchToProps)(Chat);
+export default connect(mapStateToProps, mapDispatchToProps)(Chat);
