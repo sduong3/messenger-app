@@ -13,6 +13,7 @@ const socketController = (server) => {
       });
       
       io.use((socket, next) => {
+        console.log(socket.id);
         if (!socket.handshake.headers.cookie.includes('messenger-token')){
           return socket.disconnect();
         }
@@ -26,10 +27,12 @@ const socketController = (server) => {
         })
       }).on("connection", (socket) => {
         socket.on("go-online", async (userId) => {
-          if (!isUserOnline(userId)) {
-            addOnlineUser(userId, socket.id);
-          } 
-
+          // if (!isUserOnline(userId)) {
+          //   addOnlineUser(userId, socket.id);
+          // } 
+          
+          // Handling multiple tabs by mapping multiple socketIds to user
+          addOnlineUser(userId, socket.id);
           console.log(getOnlineUsers());
           await joinRooms(socket, userId);
         });
@@ -58,7 +61,6 @@ const socketController = (server) => {
       } catch (err) {
         console.error(err);
       }
-      
   }
 
   const leaveRooms = (socket, userId) => {
@@ -72,9 +74,14 @@ const socketController = (server) => {
     socket.join(room);
     
     if (isUserOnline(data.recipientId)) {
-      const socketId = getSocketId(data.recipientId);
-      const currSocket = io.sockets.sockets.get(socketId);
-      currSocket.join(room);
+      for (let socketId of getSocketId(data.recipientId)) {
+        const currSocket = io.sockets.sockets.get(socketId);
+        
+        // Handles scenario where user reloads tab and that socket connection is destroyed
+        if (currSocket) {
+          currSocket.join(room);
+        } 
+      }
     }
 
     socket.to(room).emit("new-message", {
