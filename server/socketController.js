@@ -29,7 +29,7 @@ const socketController = (server) => {
           if (!isUserOnline(userId)) {
             addOnlineUser(userId, socket.id);
           }
-          
+
           await joinRooms(socket, userId);
         });
       
@@ -72,7 +72,6 @@ const socketController = (server) => {
     
     if (isUserOnline(data.recipientId)) {
       const socketId = getSocketId(data.recipientId);
-
       const currSocket = io.sockets.sockets.get(socketId);
       currSocket.join(room);
     }

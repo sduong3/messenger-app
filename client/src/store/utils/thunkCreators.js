@@ -49,7 +49,7 @@ export const login = (credentials) => async (dispatch) => {
     dispatch(gotUser(data));
     if (!socketClient.socket) {
       initSocket(data.id);
-    }
+    } 
     socketClient.socket.emit("go-online", data.id);
   } catch (error) {
     console.error(error);
@@ -62,7 +62,6 @@ export const logout = (id) => async (dispatch) => {
     await axios.delete("/auth/logout");
     dispatch(gotUser({}));
     socketClient.socket.emit("logout", id);
-    socketClient.socket.disconnect();
   } catch (error) {
     console.error(error);
   }
@@ -123,6 +122,10 @@ export const searchUsers = (searchTerm) => async (dispatch) => {
 
 export const markAsRead = (conversation) => async (dispatch) => {
   try {
+    if (!conversation.id) {
+      return;
+    }
+
     await axios.patch("/api/messages/markAsread", {
       conversationId: conversation.id,
       otherUserId: conversation.otherUser.id
@@ -130,6 +133,6 @@ export const markAsRead = (conversation) => async (dispatch) => {
 
     dispatch(updateReadMessages())
   } catch (error) {
-    console.log(error);
+    console.error(error);
   }
 }

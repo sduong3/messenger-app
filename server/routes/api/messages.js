@@ -42,6 +42,13 @@ router.post("/", async (req, res, next) => {
 router.patch('/markAsread', async (req, res, next) => {
   try {
     const { conversationId, otherUserId } = req.body;
+
+    if (!req.user) {
+      return res.sendStatus(401);
+    }
+
+    console.log("in markAsRead");
+    console.log(req.body);
     const messages = await Message.update(
       { isRead: true },
       { where: { conversationId, senderId: otherUserId, isRead: false }}
