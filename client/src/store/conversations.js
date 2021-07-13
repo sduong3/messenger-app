@@ -19,7 +19,7 @@ const UPDATE_READ_MESSAGES = 'UPDATE_READ_MESSAGES';
 
 // ACTION CREATORS
 
-export const updatedReadMessages = (messages) => {
+export const updateReadMessages = (messages) => {
   return {
     type: UPDATE_READ_MESSAGES,
     messages
