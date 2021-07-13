@@ -5,6 +5,7 @@ import {
   addConversation,
   setNewMessage,
   setSearchedUsers,
+  updateReadMessages
 } from "../conversations";
 import { gotUser, setFetchingStatus } from "../user";
 
@@ -117,3 +118,18 @@ export const searchUsers = (searchTerm) => async (dispatch) => {
     console.error(error);
   }
 };
+
+// MESSAGES THUNK CREATORS
+
+export const markAsRead = (conversation) => async (dispatch) => {
+  try {
+    await axios.patch("/api/messages/markAsread", {
+      conversationId: conversation.id,
+      otherUserId: conversation.otherUser.id
+    });
+
+    dispatch(updateReadMessages())
+  } catch (error) {
+    console.log(error);
+  }
+}
