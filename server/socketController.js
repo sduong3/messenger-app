@@ -1,6 +1,6 @@
 const jwt = require("jsonwebtoken");
 const cookie = require("cookie");
-const { isUserOnline, addOnlineUser, deleteOnlineUser, getSocketId } = require("./onlineUsers");
+const { isUserOnline, addOnlineUser, deleteOnlineUser, getSocketId, getOnlineUsers } = require("./onlineUsers");
 const { fetchConversationsByUserId } = require("./db/models/conversation");
 
 const socketController = (server) => {
@@ -28,8 +28,9 @@ const socketController = (server) => {
         socket.on("go-online", async (userId) => {
           if (!isUserOnline(userId)) {
             addOnlineUser(userId, socket.id);
-          }
+          } 
 
+          console.log(getOnlineUsers());
           await joinRooms(socket, userId);
         });
       

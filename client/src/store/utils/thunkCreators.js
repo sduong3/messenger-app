@@ -16,10 +16,11 @@ export const fetchUser = () => async (dispatch) => {
   try {
     const { data } = await axios.get("/auth/user");
     dispatch(gotUser(data));
+
     if (data.id) {
       if (!socketClient.socket) {
         initSocket(data.id);
-      }
+      } 
       socketClient.socket.emit("go-online", data.id);
     }
   } catch (error) {

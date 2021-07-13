@@ -42,6 +42,11 @@ const initSocket = user => {
       console.error(`connect_failed due to ${err.message}`);
       socketClient.socket.disconnect();
     });
+
+    socketClient.socket.on("disconnect", (err) => {
+      console.error(`disconnect due to ${err.message}`);
+      socketClient.socket.disconnect();
+    });
   }
 }
 
