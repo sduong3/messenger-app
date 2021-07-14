@@ -132,7 +132,7 @@ export const markAsRead = (conversation) => async (dispatch) => {
       otherUserId: conversation.otherUser.id
     });
 
-    dispatch(updateReadMessages())
+    dispatch(updateReadMessages(conversation.id, conversation.otherUser.id))
   } catch (error) {
     console.error(error);
   }

@@ -5,7 +5,6 @@ const isUserOnline = (userId) => {
 }
 
 const addOnlineUser = (userId, socketId) => {
-    // return onlineUsers[userId] = socketId;
     if (isUserOnline(userId)) {
         return onlineUsers[userId].push(socketId);
     } else {

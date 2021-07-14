@@ -13,7 +13,6 @@ const socketController = (server) => {
       });
       
       io.use((socket, next) => {
-        console.log(socket.id);
         if (!socket.handshake.headers.cookie.includes('messenger-token')){
           return socket.disconnect();
         }
@@ -27,13 +26,8 @@ const socketController = (server) => {
         })
       }).on("connection", (socket) => {
         socket.on("go-online", async (userId) => {
-          // if (!isUserOnline(userId)) {
-          //   addOnlineUser(userId, socket.id);
-          // } 
-          
           // Handling multiple tabs by mapping multiple socketIds to user
           addOnlineUser(userId, socket.id);
-          console.log(getOnlineUsers());
           await joinRooms(socket, userId);
         });
       
@@ -83,7 +77,6 @@ const socketController = (server) => {
         } 
       }
     }
-
     socket.to(room).emit("new-message", {
       message: data.message,
       sender: data.sender
